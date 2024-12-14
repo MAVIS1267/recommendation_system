@@ -1,0 +1,29 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "watch_history": [
+                "The Dark Knight",
+                "Inception",
+                "Interstellar",
+                "Batman & Robin"
+            ]
+        },
+        {
+            "id": 2,
+            "watch_history": [
+                "The Matrix",
+                "John Wick",
+                "Speed"
+            ]
+        },
+        {
+            "id": 3,
+            "watch_history": [
+                "Avatar",
+                "Titanic",
+                "Aliens"
+            ]
+        }
+    ]
+}

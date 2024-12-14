@@ -1,77 +1,44 @@
 import json
 
-USER_FILE = "Backend/data/users.json"
 
-def load_users():
-    """
-    Load user data from the JSON file.
-
-    Returns:
-        dict: A dictionary of user data.
-    """
+# Load user information from JSON file
+def load_users(file_path='data/users.json'):
     try:
-        with open(USER_FILE, "r") as f:
+        with open(file_path, 'r') as f:
             return json.load(f)
     except FileNotFoundError:
+        print(f"Error: File '{file_path}' not found.")
         return {}
+    except json.JSONDecodeError:
+        print(f"Error: Failed to decode JSON from file '{file_path}'.")
+        return {}
+
+
+# Save updated user information back to the JSON file
+def save_users(users, file_path='data/users.json'):
+    try:
+        with open(file_path, 'w') as f:
+            json.dump(users, f, indent=4)
+        print(f"User data saved to '{file_path}'.")
     except Exception as e:
-        raise Exception(f"Error loading user data: {str(e)}")
+        print(f"Error: Failed to save user data. {e}")  
 
-def save_users(users):
-    """
-    Save user data to the JSON file.
 
-    Args:
-        users (dict): A dictionary of user data.
-    """
-    with open(USER_FILE, "w") as f:
-        json.dump(users, f, indent=4)
+# Get user by username
+def get_user_by_username(username, users):
+    for user_id, user_info in users.items():
+        if user_info['username'].lower() == username.lower():
+            return user_info
+    return None
 
-def add_user(user_id, username, email):
-    """
-    Add a new user to the JSON file.
 
-    Args:
-        user_id (str): User ID.
-        username (str): Username.
-        email (str): Email address.
+# Authenticate user credentials
+def authenticate_user(username, password, users):
+    user = get_user_by_username(username, users)
+    if user:
+        if user['password'] == password:
+            return {"message": "Authentication successful.", "user": user}
+        else:
+            return {"message": "Authentication failed. Incorrect password."}
+    return {"message": "Authentication failed. User not found."}
 
-    Returns:
-        dict: A confirmation message.
-    """
-    users = load_users()
-    if user_id in users:
-        return {"message": "User already exists"}
-    users[user_id] = {"username": username, "email": email}
-    save_users(users)
-    return {"message": f"User {username} added successfully"}
-
-def get_user(user_id):
-    """
-    Retrieve information about a specific user.
-
-    Args:
-        user_id (str): User ID.
-
-    Returns:
-        dict: The user's information or a message if not found.
-    """
-    users = load_users()
-    return users.get(user_id, {"message": "User not found"})
-
-def delete_user(user_id):
-    """
-    Delete a specific user from the JSON file.
-
-    Args:
-        user_id (str): User ID.
-
-    Returns:
-        dict: A confirmation message.
-    """
-    users = load_users()
-    if user_id not in users:
-        return {"message": "User not found"}
-    del users[user_id]
-    save_users(users)
-    return {"message": f"User {user_id} deleted successfully"}
