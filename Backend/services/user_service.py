@@ -32,13 +32,3 @@ def get_user_by_username(username, users):
     return None
 
 
-# Authenticate user credentials
-def authenticate_user(username, password, users):
-    user = get_user_by_username(username, users)
-    if user:
-        if user['password'] == password:
-            return {"message": "Authentication successful.", "user": user}
-        else:
-            return {"message": "Authentication failed. Incorrect password."}
-    return {"message": "Authentication failed. User not found."}
-

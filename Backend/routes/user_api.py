@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from services.user_service import load_users, save_users, authenticate_user
+from services.user_service import load_users, save_users
 
 router = APIRouter()
 
@@ -18,11 +18,3 @@ def get_user_by_id(user_id: int):
     if user:
         return user
     raise HTTPException(status_code=404, detail="User not found.")
-
-@router.post("/users/authenticate")
-def authenticate(username: str, password: str):
-    """Authenticate a user by username and password."""
-    response = authenticate_user(username, password, users)
-    if response["message"] == "Authentication successful.":
-        return response
-    raise HTTPException(status_code=401, detail=response["message"])
