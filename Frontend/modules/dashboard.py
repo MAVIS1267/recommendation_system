@@ -3,6 +3,7 @@ import requests
 
 BASE_URL = "http://localhost:8000"
 
+
 def dashboard():
     st.title(f"Welcome, {st.session_state['user']['username']}")
 
@@ -10,14 +11,11 @@ def dashboard():
     st.header("Recommended Movies")
     user_id = st.session_state["user"]["user_id"]
 
-    # Thêm log để kiểm tra user_id và URL
-    st.write(f"Fetching recommendations for user_id: {user_id}")
-    st.write(f"API Endpoint: {BASE_URL}/api/recommendation/recommendations/user/{user_id}")
-
     # Gửi request lấy danh sách gợi ý
     try:
         params = {"user_id": user_id}
-        response = requests.get(f"{BASE_URL}/api/recommendation/recommendations/user/{user_id}", params=params)
+        response = requests.get(
+            f"{BASE_URL}/api/recommendation/recommendations/user/{user_id}", params=params)
 
         # Kiểm tra status code
         if response.status_code == 200:
@@ -32,11 +30,12 @@ def dashboard():
                         # Gửi request cập nhật lịch sử xem
                         watch_response = requests.post(
                             f"{BASE_URL}/api/history/history/{user_id}/add",
-                            json={"id": user_id, "watch_history": movie}
+                            params={"movie_title": movie}
                         )
                         if watch_response.status_code == 200:
-                            st.success(f"'{movie}' added to your watch history!")
-                            st.experimental_rerun()
+                            st.success(
+                                f"'{movie}' added to your watch history!")
+                            st.rerun()
                         else:
                             st.error("Failed to update watch history.")
         else:
